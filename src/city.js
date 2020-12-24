@@ -1,50 +1,45 @@
-const INITIAL_COINS_COUNT = 1000000;
-const REPRESENTATIVE_PORTION = INITIAL_COINS_COUNT / 1000;
-
 export class City {
-    constructor(coinTypes,
+    constructor(
+        x,
+        y,
+        coinTypes,
         countryName,
-        initialCoinsCount = INITIAL_COINS_COUNT,
-        representativePortion = REPRESENTATIVE_PORTION,
     ) {
-        this.countryName = countryName;
-        this.coinTypes = coinTypes;
+        this.x = x;
+        this.y = y;
         this.neighbors = [];
+        this.countryName = countryName;
 
-        this.coins = new Array(coinTypes.length).fill(0);
-        this.cache = new Array(coinTypes.length).fill(0);
-
-        const countryIndex = this.coinTypes.indexOf(this.countryName);
-
-        this.coins[countryIndex] = initialCoinsCount;
-        this.representativePortion = representativePortion;
+        const defaultCoins = coinTypes.map((type) => ({ type, value: 0 }));
+        this.defaultCoins = defaultCoins
+        this.coins = defaultCoins;
+        this.income = defaultCoins;
+        
+        this.coins[this.coins.findIndex((coin) => coin.type === countryName)].value = 1000000;
     }
 
     isCompleted() {
-        return this.coins.every((coin) => coin > 0);
+        return this.coins.every((coin) => coin.value > 0);
     }
 
-    /**
-     * Transport coins to neighbors
-     */
-    transportCoinsToNeighbors() {
-        this.coins.forEach((coinCount, index) => {
-            const share = Math.floor(coinCount / this.representativePortion);
+    clearIncome() {
+        this.coins.map((coin, index) => {
+            return {
+                ...coin,
+                value: this.income[index].value
+            };
+        })
+        this.income = this.defaultCoins;
+    }
+
+    shareCoins() {
+        this.coins.forEach((coin, index) => {
+            const share = Math.floor(coin.value / 1000);
             this.neighbors.forEach((city) => {
-                city.cache[index] += share;
-                this.coins[index] -= share;
+                city.income[index].value += share;
+                this.coins[index].value -= share;
             });
         });
-    }
-
-    /**
-     * Update coins number
-     */
-    updateCoins() {
-        for (let coinTypeIndex = 0; coinTypeIndex < this.coinTypes.length; coinTypeIndex++) {
-            this.coins[coinTypeIndex] += this.cache[coinTypeIndex];
-            this.cache[coinTypeIndex] = 0;
-        }
     }
 }
 
