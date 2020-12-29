@@ -15,7 +15,7 @@ function addNeighborsToCities(countries, grid) {
         if (x < maxX) {
             addNeighbor(x + 1, y);
         }
-        if (x > minY) {
+        if (x > minX) {
             addNeighbor(x - 1, y);
         }
         if (y < maxY) {
@@ -40,6 +40,15 @@ function addCitiesToGrid(countries) {
     return grid;
 }
 
+function setLeftCountries(day, result, countries) {
+    countries.forEach((country) => {
+        if (!result.has(country.name)) {
+            result.set(country.name, day);
+        }
+    });
+    return result;
+} 
+
 export function initGrid(countries) {
     const grid = addCitiesToGrid(countries);
     addNeighborsToCities(countries, grid);
@@ -52,7 +61,7 @@ export function diffusion(countries, grid) {
     for(; !isGridCompleted(countries); day += 1) {
         grid.forEach((city) => {
             city.shareCoins();
-            city.clearIncome(); 
+            city.clearIncome();
         });
         countries.forEach((country) => {
             if (country.isCompleted()) {
@@ -63,13 +72,7 @@ export function diffusion(countries, grid) {
         });
     }
 
-    countries.forEach((country) => {
-        if (!result.has(country.name)) {
-            result.set(country.name, day);
-        }
-    });
-
-    return result;
+    return setLeftCountries(day, result, countries);
 }
 
 
