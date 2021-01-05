@@ -1,3 +1,5 @@
+const representativeValue = 1000;
+const initialCoinsValue = 1000000;
 export class City {
     constructor(
         x,
@@ -9,32 +11,28 @@ export class City {
         this.y = y;
         this.neighbors = [];
         this.countryName = countryName;
+        this.coinTypes = coinTypes;
 
-        const defaultCoins = coinTypes.map((type) => ({ type, value: 0 }));
-        this.defaultCoins = defaultCoins
-        this.coins = defaultCoins;
-        this.income = defaultCoins;
-        
-        this.coins[this.coins.findIndex((coin) => coin.type === countryName)].value = 1000000;
+        this.coins = coinTypes.map((type) => ({ type, value: 0 }));;
+        this.income = coinTypes.map((type) => ({ type, value: 0 }));;
+
+        this.coins[this.coinTypes.indexOf(this.countryName)].value = initialCoinsValue;
     }
-
+    
     isCompleted() {
         return this.coins.every((coin) => coin.value > 0);
     }
 
     clearIncome() {
-        this.coins.map((coin, index) => {
-            return {
-                ...coin,
-                value: this.income[index].value
-            };
+        this.coinTypes.forEach((type, index) => {
+            this.coins[index].value += this.income[index].value;
+            this.income[index].value = 0;
         })
-        this.income = this.defaultCoins;
     }
 
     shareCoins() {
         this.coins.forEach((coin, index) => {
-            const share = Math.floor(coin.value / 1000);
+            const share = Math.floor(coin.value / representativeValue);
             this.neighbors.forEach((city) => {
                 city.income[index].value += share;
                 this.coins[index].value -= share;
