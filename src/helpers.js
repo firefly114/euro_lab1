@@ -30,7 +30,7 @@ export function forEachCoords(initX, initY, limitX, limitY, callback) {
 export function areCoordinatesValid(xl, yl, xh, yh) {
   const isTypeValid = [xl, yl, xh, yh].every((point) => {
     if (!Number.isInteger(point)) return false;
-    return ((point >= MIN_COORDINATE) && (point <= MAX_COORDINATE));
+    return (point >= MIN_COORDINATE) && (point <= MAX_COORDINATE);
   })
 
   return isTypeValid && xl <= xh && yl <= yh;

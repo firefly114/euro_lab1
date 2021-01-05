@@ -28,10 +28,8 @@ const calculateCase = (inputStrings) => {
     }
 };
 
-(() => {
-    const countryStrings = readInputFile('input');
-    countryStrings.forEach((countries, index) => {
-        console.log(` Case № ${index + 1}`, countries);
-        calculateCase(countries);
-    });
-})();
+const countryStrings = readInputFile('input');
+countryStrings.forEach((countries, index) => {
+    console.log(` Case № ${index + 1}`, countries);
+    calculateCase(countries);
+});

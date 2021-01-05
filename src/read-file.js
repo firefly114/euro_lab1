@@ -8,7 +8,8 @@ export default function readInputFile(filename) {
     const lines = fs.readFileSync(filename).toString().split('\n').map((line) => line.replace('\r', ''));
 
     let lineIndex = 0;
-    while (lineIndex < lines.length - 2) {
+    const eofLines = 2; // 0 as a end of file line and last array index
+    while (lineIndex < lines.length - eofLines) {
         const countryNumber = parseInt(lines[lineIndex]);
         if (countryNumber) {
             lineIndex += 1;
